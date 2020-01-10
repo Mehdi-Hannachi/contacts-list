@@ -1,8 +1,9 @@
 import React from "react";
 import "../Contact-Form/contact-form.css";
+import axios from "axios";
 import { Link } from "react-router-dom";
 
-class ContactForm extends React.Component {
+class EditContact extends React.Component {
   state = {
     fullname: "",
     email: "",
@@ -16,8 +17,27 @@ class ContactForm extends React.Component {
     });
   };
 
+  editContact = id => {
+    axios
+      .put(`/update_contact/${this.props.match.params.id}`, this.state)
+      .then(this.props.getContacts);
+  };
+  componentDidMount() {
+    console.log("this.props", this.props.match.params.id);
+    axios
+      .get(`/show_contact/${this.props.match.params.id}`)
+      .then(contact =>
+        this.setState({
+          fullname: contact.data.fullname,
+          email: contact.data.email,
+          adress: contact.data.adress,
+          phonenumber: contact.data.phonenumber
+        })
+      )
+      .then(contact => console.log("contact", contact));
+  }
+
   render() {
-    console.log(this.props.id)
     return (
       <div className="background">
         <div className="container">
@@ -39,7 +59,7 @@ class ContactForm extends React.Component {
                       className="app-form-control"
                       name="fullname"
                       placeholder="FULL NAME"
-                      value={this.state.fullname}
+                      defaultValue={this.state.fullname}
                       onChange={this.handelChange}
                     />
                   </div>
@@ -48,7 +68,7 @@ class ContactForm extends React.Component {
                       className="app-form-control"
                       name="email"
                       placeholder="EMAIL"
-                      value={this.state.email}
+                      defaultValue={this.state.email}
                       onChange={this.handelChange}
                     />
                   </div>
@@ -57,7 +77,7 @@ class ContactForm extends React.Component {
                       className="app-form-control"
                       name="phonenumber"
                       placeholder="PHONE NUMBER"
-                      value={this.state.phonenumber}
+                      defaultValue={this.state.phonenumber}
                       onChange={this.handelChange}
                     />
                   </div>
@@ -66,7 +86,7 @@ class ContactForm extends React.Component {
                       className="app-form-control"
                       name="adress"
                       placeholder="ADRESS"
-                      value={this.state.adress}
+                      defaultValue={this.state.adress}
                       onChange={this.handelChange}
                     />
                   </div>
@@ -75,13 +95,10 @@ class ContactForm extends React.Component {
                     <Link to="/ConatctList">
                       <button
                         className="app-form-button"
-                        
-                        onClick={() => this.props.addContacts(this.state)}
-
+                        onClick={() => this.editContact(this.state)}
                       >
                         MODIFY
                       </button>
-                      {/* onClick={() => this.props.updateContact(this.props.id,this.state)} */}
                     </Link>
                   </div>
                 </div>
@@ -117,4 +134,4 @@ class ContactForm extends React.Component {
   }
 }
 
-export default ContactForm;
+export default EditContact;

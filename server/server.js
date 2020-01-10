@@ -17,44 +17,48 @@ MongoClient.connect(mongo_url, (err, client) => {
 
   app.post("/new_contact", (req, res) => {
     let newContact = req.body;
-    db.collection("Contacts").insertOne(newContact, (err, data) => {
-      if (err) res.send("Can t add contact");
-      else res.send("contact added");
-    });
+    db.collection("Contacts")
+      .insertOne(newContact)
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
   });
 
   app.get("/show_contacts", (req, res) => {
     db.collection("Contacts")
       .find()
-      .toArray((err, data) => {
-        if (err) res.send("Cant fetch Contacts");
-        else res.send(data);
-      });
+      .toArray()
+      .then(data => res.send(data))
+      .catch(err => res.send("Cant fetch Contacts"));
+  });
+
+  app.get("/show_contact/:id", (req, res) => {
+    const { id } = req.params;
+    console.log("id", id);
+    db.collection("Contacts")
+      .findOne({ _id: ObjectID(id) })
+      .then(contact => {
+        res.send(contact);
+        console.log("contact", contact);
+      })
+      .catch(err => res.send(err));
   });
 
   app.delete("/delete_contact/:id", (req, res) => {
     let contact_to_remove = ObjectID(req.params.id);
 
-    db.collection("Contacts").findOneAndDelete(
-      { _id: contact_to_remove },
-      (err, data) => {
-        if (err) res.send("Cant Delete conatct");
-        else res.send("Contact  was Deleted");
-      }
-    );
+    db.collection("Contacts")
+      .findOneAndDelete({ _id: contact_to_remove })
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
   });
 
   app.put("/update_contact/:id", (req, res) => {
     let id = ObjectID(req.params.id);
     let updated_contact = req.body;
-    db.collection("Contacts").findOneAndUpdate(
-      { _id: id },
-      { $set: { ...updated_contact } },
-      (err, data) => {
-        if (err) res.send("Cant Update Contact");
-        else res.send("Contact  was updated");
-      }
-    );
+    db.collection("Contacts")
+      .findOneAndUpdate({ _id: id }, { $set: { ...updated_contact } })
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
   });
 });
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 class ContactsList extends React.Component {
   render() {
+    console.log("this.props", this.props);
     return (
       <div className="list">
         {this.props.getContacts.map((contact, i) => (
@@ -23,8 +24,8 @@ class ContactsList extends React.Component {
                     className="fas fa-trash-alt"
                     onClick={() => this.props.deleteContact(contact._id)}
                   ></i>
-                  
-                  <Link to={{ pathname: "/addContact", id:contact._id }}>
+
+                  <Link to={`/editcontact/${contact._id}`}>
                     <i className="fas fa-edit"></i>
                   </Link>
                 </div>

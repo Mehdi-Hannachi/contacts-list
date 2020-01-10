@@ -3,8 +3,9 @@ import "./App.css";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
-import ContactForm from "./Components/Contact-Form/Contact-Form";
+import AddContact from "./Components/Contact-Form/add-contact";
 import ContactsList from "./Components/Contact-list/Contacts-List";
+import EditContact from "./Components/Contact-Form/edit-contact";
 
 class App extends React.Component {
   state = {
@@ -26,12 +27,9 @@ class App extends React.Component {
   };
 
   deleteContact = id => {
-    axios.delete("/delete_contact/" + id).then(res => this.getContacts());
+    axios.delete(`/delete_contact/${id}`).then(res => this.getContacts());
   };
 
-  editContact = (id, newobj) => {
-    axios.put("/update_contact/" + id, newobj).then(res => this.getContacts());
-  };
   render() {
     return (
       <Router>
@@ -50,19 +48,31 @@ class App extends React.Component {
             <Route exact path="/">
               <h1>welcom</h1>
             </Route>
-            <Route exact path="/addContact">
-              <ContactForm
-                getContacts={this.state.contacts}
-                addContacts={this.addContacts}
-                updateContact={this.editContact}
-              />
-            </Route>
-            <Route exact path="/ConatctList">
-              <ContactsList
-                getContacts={this.state.contacts}
-                deleteContact={this.deleteContact}
-              />
-            </Route>
+            <Route
+              exact
+              path="/addContact"
+              render={() => (
+                <AddContact
+                  getContacts={this.state.contacts}
+                  addContacts={this.addContacts}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/editcontact/:id"
+              component={EditContact}
+            />
+            <Route
+              exact
+              path="/ConatctList"
+              render={() => (
+                <ContactsList
+                  getContacts={this.state.contacts}
+                  deleteContact={this.deleteContact}
+                />
+              )}
+            />
           </Switch>
         </div>
       </Router>

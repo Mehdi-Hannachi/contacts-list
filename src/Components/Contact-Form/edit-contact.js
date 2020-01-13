@@ -38,6 +38,7 @@ class EditContact extends React.Component {
   }
 
   render() {
+    console.log("this.props", this.props);
     return (
       <div className="background">
         <div className="container">

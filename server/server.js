@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 const mongo_url = "mongodb://localhost:27017";
 const dataBase = "Contacts-List";
 
-MongoClient.connect(mongo_url, (err, client) => {
+MongoClient.connect(mongo_url, { useUnifiedTopology: true }, (err, client) => {
   assert.equal(err, null, "Data base connexion failed");
 
   const db = client.db(dataBase);

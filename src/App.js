@@ -26,10 +26,6 @@ class App extends React.Component {
     axios.post("/new_contact", obj).then(this.getContacts);
   };
 
-  deleteContact = id => {
-    axios.delete(`/delete_contact/${id}`).then(res => this.getContacts());
-  };
-
   render() {
     return (
       <Router>
@@ -53,7 +49,7 @@ class App extends React.Component {
               path="/addContact"
               render={() => (
                 <AddContact
-                  getContacts={this.state.contacts}
+                // listContacts={this.state.contacts}
                   addContacts={this.addContacts}
                 />
               )}
@@ -61,17 +57,14 @@ class App extends React.Component {
             <Route
               exact
               path="/editcontact/:id"
-              component={EditContact}
+              render={({ match }) => (
+                <EditContact match={match} getContacts={this.getContacts} />
+              )}
             />
             <Route
               exact
               path="/ConatctList"
-              render={() => (
-                <ContactsList
-                  getContacts={this.state.contacts}
-                  deleteContact={this.deleteContact}
-                />
-              )}
+              render={() => <ContactsList listContacts={this.state.contacts} getContacts={this.getContacts} />}
             />
           </Switch>
         </div>
